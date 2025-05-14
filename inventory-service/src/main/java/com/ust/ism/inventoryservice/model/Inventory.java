@@ -1,12 +1,15 @@
 package com.ust.ism.inventoryservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,15 +19,44 @@ public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(cascade =  CascadeType.ALL)
-    @MapsId
-    @JoinColumn(name = "supplier_id",referencedColumnName = "id")
-    private Supplier supplier;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @MapsId
-    @JoinColumn(name = "product_id",referencedColumnName = "id")
-    private Products products;
+    @Column(name = "item_name")
+    @NotBlank(message = "Item name is required")
+    private  String itemName;
+
+    public @NotBlank(message = "Item name is required") String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(@NotBlank(message = "Item name is required") String itemName) {
+        this.itemName = itemName;
+    }
+
+    public String getItemDescription() {
+        return itemDescription;
+    }
+
+    public void setItemDescription(String itemDescription) {
+        this.itemDescription = itemDescription;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    @Column(name = "item_desc")
+    private String itemDescription;
+    @Column(name = "price")
+    private BigDecimal price;
+    @ManyToOne(fetch = FetchType.LAZY)
+//    @MapsId
+    @JoinColumn(name = "supplier_id")
+    @JsonBackReference
+    private Supplier supplier;
 
     @Column(name = "createdTs",nullable = false,updatable = false)
     @CreationTimestamp
@@ -97,13 +129,6 @@ public class Inventory {
         this.itemQunatity = itemQunatity;
     }
 
-    public Products getProducts() {
-        return products;
-    }
-
-    public void setProducts(Products products) {
-        this.products = products;
-    }
 
     public Supplier getSupplier() {
         return supplier;

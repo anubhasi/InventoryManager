@@ -1,5 +1,35 @@
 spring:
   application:
     name : notification-service
-  config:
-    import: optional:configserver:http://localhost:8085
+#  config:
+#    import: optional:configserver:http://localhost:8085
+#  profiles:
+#    active: native
+server:
+  port: 9092
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+resilience4j:
+  circuitbreaker:
+    instances:
+      myService:
+        register-health-indicator: true
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 5
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state : 2s
+        automatic-transition-from-open-to-half-open-enabled : true
+#        record-exceptions:
+#          - org.springframework.web.client.ResourceAccessException
+#          - java.net.ConnectException
+  retry:
+    instances:
+      myService:
+        max-attempts: 3
+        wait-duration: 1s
+        retry-exception:
+          - java.lang.RuntimeException

@@ -1,0 +1,20 @@
+server:
+  port: 9092
+spring:
+  application:
+    name : notification-service
+resilience4j:
+  circuitbreaker:
+    instances:
+      notification-service:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 8
+        minimum-number-of-calls: 3
+        failure-rate-threshold: 20
+        wait-duration-in-open-state : 5s
+        permitted-number-of-calls-in-half-open-state: 2
+        record-exceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - org.springframework.web.client.ResourceAccessException
+          - java.net.ConnectException
+#          - com.ust.ims.notification_service.exception.ResourceNotFoundException

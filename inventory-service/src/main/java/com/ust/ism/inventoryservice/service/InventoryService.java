@@ -1,6 +1,7 @@
 package com.ust.ism.inventoryservice.service;
 
 import com.ust.ism.inventoryservice.model.Inventory;
+import com.ust.ism.inventoryservice.model.InventoryRequestDTO;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public interface InventoryService {
 
     Optional <Inventory> getItemById(Long id);
 
-    Inventory saveItem(Inventory i);
+    Inventory saveItem(InventoryRequestDTO i);
 
-    Inventory updateItem(Inventory i ,Long id);
+    Inventory updateItem(InventoryRequestDTO i , Long id);
 
     void deleteItem(Long id);
 

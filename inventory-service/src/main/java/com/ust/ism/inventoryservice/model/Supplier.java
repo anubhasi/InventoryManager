@@ -1,8 +1,11 @@
 package com.ust.ism.inventoryservice.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Table(name = "supplier")
@@ -15,11 +18,30 @@ public class Supplier {
     @NotBlank
     private String supplierName;
 
-    @OneToOne(mappedBy = "orders")
-    private Inventory inventory;
 
-    @OneToOne(mappedBy = "orders")
-    private Order order;
+    @OneToMany(mappedBy = "supplier",fetch = FetchType.LAZY,orphanRemoval = false)
+    @JsonManagedReference
+    private List<Inventory> items;
+
+    @OneToMany(mappedBy = "supplier",fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Order> orders;
+
+    public List<Inventory> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Inventory> items) {
+        this.items = items;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 
     public Long getId() {
         return id;
@@ -29,13 +51,7 @@ public class Supplier {
         this.id = id;
     }
 
-    public Inventory getInventory() {
-        return inventory;
-    }
 
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
-    }
 
     public @NotBlank String getSupplierName() {
         return supplierName;
@@ -45,11 +61,4 @@ public class Supplier {
         this.supplierName = supplierName;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
 }

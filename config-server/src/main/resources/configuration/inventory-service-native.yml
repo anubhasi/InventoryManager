@@ -1,6 +1,25 @@
 server:
   port: 9091
+
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/inventory-management
+      client:
+        registration:
+          keycloak:
+            client-id: inventory-client
+            client-secret: PUwQFn8smpEj6yLrD3aVmefYSCHlgCx9
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:9091/login/oauth2/code/keycloak
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/inventory-management
+            authorization-uri: http://localhost:8080/realms/inventory-management/protocol/openid-connect/auth
+            token-uri: http://localhost:8080/realms/inventory-management/protocol/openid-connect/token
+            user-info-uri: http://localhost:8080/realms/inventory-management/protocol/openid-connect/userinfo
   datasource:
 #    platform: postgres
     url: jdbc:postgresql://localhost:5432/ims
@@ -14,4 +33,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false

@@ -50,33 +50,9 @@ public class Products {
         this.itemCategory = itemCategory;
     }
 
-    public Inventory getInventory() {
-        return inventory;
-    }
 
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
 
     @Column(name = "item_category")
     private String itemCategory;
-
-
-    @OneToOne(mappedBy = "products")
-    private Inventory inventory;
-
-    @OneToOne(mappedBy = "products")
-    private Order order;
-
-
-
 
 }

@@ -1,11 +1,14 @@
 package com.ust.ism.inventoryservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "orders")
@@ -15,12 +18,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "prod_id",referencedColumnName = "id")
-    private Products products;
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<OrderItem> orderItems;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "sup_id",referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "sup_id")
+    @JsonBackReference
     private Supplier supplier;
 
     @NotNull(message = "Quantity is required")
@@ -36,6 +40,13 @@ public class Order {
     @Column(name = "status")
     private String status;
 
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
 
     public Long getId() {
         return id;
@@ -45,13 +56,7 @@ public class Order {
         this.id = id;
     }
 
-    public Products getProducts() {
-        return products;
-    }
 
-    public void setProducts(Products products) {
-        this.products = products;
-    }
 
     public Supplier getSupplier() {
         return supplier;

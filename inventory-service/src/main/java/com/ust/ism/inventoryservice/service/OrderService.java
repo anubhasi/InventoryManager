@@ -2,6 +2,8 @@ package com.ust.ism.inventoryservice.service;
 
 
 import com.ust.ism.inventoryservice.model.Order;
+import com.ust.ism.inventoryservice.model.OrderDTO;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -15,7 +17,10 @@ public interface OrderService {
 
     Optional<Order> getOrderById(Long id);
 
-    Order saveOrder(Order order);
+    @Transactional
+    Order saveOrder(OrderDTO orderDTO);
 
-    Order updateOrderStatus(Long id,String status) throws Exception;
+    Order updateOrderStatus(Long id, String status) throws Exception;
+
+    Optional<List<Order>> getDelayedOrders();
 }
